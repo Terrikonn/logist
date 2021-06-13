@@ -1,0 +1,33 @@
+[package]
+name = "logist"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+cfg-if = "1.0.0"
+no-std-compat = { version = "0.4.1", features = [] }
+
+[features]
+default = ["std"]
+std = ["no-std-compat/std"]
+
+max_level_off   = []
+max_level_error = []
+max_level_warn  = []
+max_level_info  = []
+max_level_debug = []
+max_level_trace = []
+
+release_max_level_off   = []
+release_max_level_error = []
+release_max_level_warn  = []
+release_max_level_info  = []
+release_max_level_debug = []
+release_max_level_trace = []
+
+# [workspace]
+# members = [
+#     "macros",
+#     "parser",
+# ]
