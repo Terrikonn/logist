@@ -37,19 +37,19 @@ macro_rules! log {
 /// # Examples
 ///
 /// ```edition2018
-/// use logist::emergency;
+/// use logist::emerg;
 ///
 /// # fn main() {
-/// emergency!("System is unusable!");
+/// emerg!("System is unusable!");
 /// # }
 /// ```
 #[macro_export(local_inner_macros)]
-macro_rules! emergency {
+macro_rules! emerg{
     (target: $target:expr, $($arg:tt)+) => (
-        log!(target: $target, $crate::Level::Emergency, $($arg)+)
+        log!(target: $target, $crate::Level::Emerg, $($arg)+)
     );
     ($($arg:tt)+) => (
-        log!($crate::Level::Emergency, $($arg)+)
+        log!($crate::Level::Emerg, $($arg)+)
     )
 }
 

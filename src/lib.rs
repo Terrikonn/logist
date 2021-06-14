@@ -86,15 +86,7 @@ const INITIALIZED: usize = 2;
 static MAX_LOG_LEVEL_FILTER: AtomicUsize = AtomicUsize::new(0);
 
 static LOG_LEVEL_NAMES: [&str; 9] = [
-    "OFF",
-    "EMERGENCY",
-    "ALERT",
-    "CRIT",
-    "ERROR",
-    "WARN",
-    "NOTICE",
-    "INFO",
-    "DEBUG",
+    "OFF", "EMERG", "ALERT", "CRIT", "ERROR", "WARN", "NOTICE", "INFO", "DEBUG",
 ];
 
 static SET_LOGGER_ERROR: &str =
@@ -111,7 +103,7 @@ static LEVEL_PARSE_ERROR: &str =
 #[derive(Copy, Eq, Debug, Hash)]
 pub enum Level {
     /// System is unusable
-    Emergency = 1,
+    Emerg = 1,
     /// Action must be taken immediately
     Alert = 2,
     /// Critical conditions
@@ -220,7 +212,7 @@ impl fmt::Display for Level {
 impl Level {
     fn from_usize(u: usize) -> Option<Self> {
         match u {
-            1 => Some(Self::Emergency),
+            1 => Some(Self::Emerg),
             2 => Some(Self::Alert),
             3 => Some(Self::Crit),
             4 => Some(Self::Error),
@@ -264,8 +256,8 @@ impl Level {
 pub enum LevelFilter {
     /// A level lower than all log levels.
     Off = 0,
-    /// Corresponds to the `Emergency` log level.
-    Emergency = 1,
+    /// Corresponds to the `Emerg` log level.
+    Emerg = 1,
     /// Corresponds to the `Alert` log level.
     Alert = 2,
     /// Corresponds to the `Crit` log level.
@@ -372,7 +364,7 @@ impl LevelFilter {
     fn from_usize(u: usize) -> Option<Self> {
         match u {
             0 => Some(Self::Off),
-            1 => Some(Self::Emergency),
+            1 => Some(Self::Emerg),
             2 => Some(Self::Alert),
             3 => Some(Self::Crit),
             4 => Some(Self::Error),
@@ -841,13 +833,13 @@ pub fn set_max_level(level: LevelFilter) {
 
 /// Returns the current maximum log level.
 ///
-/// The [`log!`], [`emergency!`], [`alert!`], [`cirtical!`], [`error!`],
+/// The [`log!`], [`emerg!`], [`alert!`], [`cirtical!`], [`error!`],
 /// [`warning!`], [`notice!`], [`informational!`] and [`debug!`] macros check
 /// this value and discard any message logged at a higher level. The maximum
 /// log level is set by the [`set_max_level`] function.
 ///
 /// [`log!`]: macro.log.html
-/// [`emergency!`]: macro.emergency.html
+/// [`emerg!`]: macro.emer.html
 /// [`alert!`]: macro.alert.html
 /// [`critical!`]: macro.critical.html
 /// [`error!`]: macro.error.html
@@ -1098,7 +1090,7 @@ cfg_if! {
     if #[cfg(all(not(debug_assertions), feature = "release_max_level_off"))] {
         const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Off;
     } else if #[cfg(all(not(debug_assertions), feature = "release_max_level_emergency"))] {
-        const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Emergency;
+        const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Emerg;
     } else if #[cfg(all(not(debug_assertions), feature = "release_max_level_alert"))] {
         const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Alert;
     } else if #[cfg(all(not(debug_assertions), feature = "release_max_level_ciritcal"))] {
@@ -1116,7 +1108,7 @@ cfg_if! {
     } else if #[cfg(feature = "max_level_off")] {
         const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Off;
     } else if #[cfg(feature = "max_level_emergency")] {
-        const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Emergency;
+        const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Emerg;
     } else if #[cfg(feature = "max_level_alert")] {
         const MAX_LEVEL_INNER: LevelFilter = LevelFilter::Alert;
     } else if #[cfg(feature = "max_level_critical")] {
@@ -1148,7 +1140,7 @@ mod tests {
     fn test_levelfilter_from_str() {
         let tests = [
             ("off", Ok(LevelFilter::Off)),
-            ("emergency", Ok(LevelFilter::Emergency)),
+            ("emerg", Ok(LevelFilter::Emerg)),
             ("alert", Ok(LevelFilter::Alert)),
             ("crit", Ok(LevelFilter::Crit)),
             ("error", Ok(LevelFilter::Error)),
@@ -1157,7 +1149,7 @@ mod tests {
             ("info", Ok(LevelFilter::Info)),
             ("debug", Ok(LevelFilter::Debug)),
             ("OFF", Ok(LevelFilter::Off)),
-            ("EMERGENCY", Ok(LevelFilter::Emergency)),
+            ("EMERG", Ok(LevelFilter::Emerg)),
             ("ALERT", Ok(LevelFilter::Alert)),
             ("CRIT", Ok(LevelFilter::Crit)),
             ("ERROR", Ok(LevelFilter::Error)),
@@ -1176,7 +1168,7 @@ mod tests {
     fn test_level_from_str() {
         let tests = [
             ("off", Err(ParseLevelError)),
-            ("emergency", Ok(Level::Emergency)),
+            ("emerg", Ok(Level::Emerg)),
             ("alert", Ok(Level::Alert)),
             ("crit", Ok(Level::Crit)),
             ("error", Ok(Level::Error)),
@@ -1185,7 +1177,7 @@ mod tests {
             ("info", Ok(Level::Info)),
             ("debug", Ok(Level::Debug)),
             ("OFF", Err(ParseLevelError)),
-            ("EMERGENCY", Ok(Level::Emergency)),
+            ("EMERG", Ok(Level::Emerg)),
             ("ALERT", Ok(Level::Alert)),
             ("CRIT", Ok(Level::Crit)),
             ("ERROR", Ok(Level::Error)),
@@ -1203,7 +1195,7 @@ mod tests {
     #[test]
     fn test_level_as_str() {
         let tests = &[
-            (Level::Emergency, "EMERGENCY"),
+            (Level::Emerg, "EMERG"),
             (Level::Alert, "ALERT"),
             (Level::Crit, "CRIT"),
             (Level::Error, "ERROR"),
@@ -1260,7 +1252,7 @@ mod tests {
     fn test_level_filter_as_str() {
         let tests = &[
             (LevelFilter::Off, "OFF"),
-            (LevelFilter::Emergency, "EMERGENCY"),
+            (LevelFilter::Emerg, "EMERG"),
             (LevelFilter::Alert, "ALERT"),
             (LevelFilter::Crit, "CRIT"),
             (LevelFilter::Error, "ERROR"),
